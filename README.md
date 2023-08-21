@@ -1,462 +1,168 @@
-Contribution: 2021-10-14 10:00
+# Module Project: Context API - Shopping Cart
 
-Contribution: 2021-10-14 10:01
+In this module you will take your newfound knowledge of `Context API` and refactor a e-commerce store to use `Context API` as well as extend the functionality of the application making it more robust!
 
-Contribution: 2021-10-14 10:02
+## Introduction
 
-Contribution: 2021-10-14 10:03
+Read these instructions carefully. Understand exactly what is expected _before_ starting this project.
 
-Contribution: 2021-10-14 10:04
+### Commits
 
-Contribution: 2021-10-14 10:05
+Commit your code regularly and meaningfully. This helps both you and your team lead in case you ever need to return to old code for any number of reasons.
 
-Contribution: 2021-10-14 10:06
+### Description
 
-Contribution: 2021-10-14 10:07
+In this project you'll take take an almost completed e-commerce store and refactor the application to use the `Context API`.
 
-Contribution: 2021-10-14 10:08
+### Instructions
 
-Contribution: 2021-10-14 10:09
+### Task 1: Project Set up
 
-Contribution: 2021-10-14 10:10
+- [ ] Create a forked copy of this project.
+- [ ] Add your team lead as collaborator on Github.
+- [ ] Clone your OWN version of the repository in your terminal.
+- [ ] CD into the project base directory `cd react-shopping-cart`.
+- [ ] Download project dependencies by running `npm install`.
+- [ ] Start up the app using `npm start`.
+- [ ] Create a new branch: git checkout -b `<firstName-lastName>`.
+- [ ] Implement the project on your newly created `<firstName-lastName>` branch, committing changes regularly.
+- [ ] Push commits: git push origin `<firstName-lastName>`.
 
-Contribution: 2021-10-14 10:11
+### Task 2: MVP
 
-Contribution: 2021-10-15 10:00
+Before you get started, please take a few minutes and get acquainted with this application. Understand what's going on and how it's working.
 
-Contribution: 2021-10-15 10:01
+- If you look in the `App.js` you'll notice there are currently two state properties - `products` to keep track of all available products, and `cart` that will keep track of all the items in our `cart`.
 
-Contribution: 2021-10-15 10:02
+- You'll also notice inside of our `App.js` we have 3 components. A navigation component and two route based components. Each of those components are all being passed either our `cart` state or `product` state as props, when we start to scale our application and add more props our codebase is going to start to become very cumbersome and will make our application hard to work with.
 
-Contribution: 2021-10-15 10:03
+- To combat this from happening we're going to refactor our application to use `Context API`, making it easier and more effiecent to access data across our application.
 
-Contribution: 2021-10-15 10:04
+**Step 1 - Add item functionality**
 
-Contribution: 2021-10-18 10:00
+- In `App.js` there is a function called `addItem`. Finish writing the logic in this function to be able to add the given item to the shopping cart
 
-Contribution: 2021-10-18 10:01
+**STEP 2 - Creating ProductContext**
 
-Contribution: 2021-10-18 10:02
+- In `src`, create a new folder named `contexts`, this folder is going to be used to hold all of `context objects` we create.
 
-Contribution: 2021-10-18 10:03
+- Inside that folder create a new file named `ProductContext.js`
 
-Contribution: 2021-10-18 10:04
+- In this file, import the `createContext` function from the react library and create our `ProductContext`.
 
-Contribution: 2021-10-18 10:05
+**STEP 3 - Providing data with ProductContext**
 
-Contribution: 2021-10-20 10:00
+- Now that we've created our `ProductContext` we can import into our `App.js`. Now we can start providing data across our application!
 
-Contribution: 2021-10-20 10:01
+- Wrap all of your components/routes in `App.js` inside of `ProductContext.Provider` component.
 
-Contribution: 2021-10-20 10:02
+- Next pass a value prop to your `Provider`.
 
-Contribution: 2021-10-20 10:03
+- In the value prop we'll pass in the products state, and an addItem function that will allow us to add books to the cart.
 
-Contribution: 2021-10-21 10:00
+```js
+<ProductContext.Provider value={{ products, addItem }}>
+```
 
-Contribution: 2021-10-21 10:01
+- Now that we're providing our products state and addItem function we can simplify our products route a bit.
 
-Contribution: 2021-10-21 10:02
+**Before**
 
-Contribution: 2021-10-21 10:03
+```js
+<Route exact path="/">
+  <Products products={products} addItem={addItem} />
+</Route>
+```
 
-Contribution: 2021-10-21 10:04
+**After**
 
-Contribution: 2021-10-21 10:05
+```js
+<Route exact path="/">
+  <Products />
+</Route>
+```
 
-Contribution: 2021-10-21 10:06
+- After refactoring you'll notice a few errors... Don't worry we'll clean those up shortly!
 
-Contribution: 2021-10-21 10:07
+**STEP 4 - Consuming data with ProductContext**
 
-Contribution: 2021-10-21 10:08
+- Now that our `ProductContext` is now providing data we can finally consume it! To do so let's head over to our `Products` component and import the `useContext` hook as well as our `ProductContext`.
 
-Contribution: 2021-10-21 10:09
+- In the component, call the `useContext` hook and pass in the context object we want to use into it.
 
-Contribution: 2021-10-21 10:10
+- When we do this, `useContext` is going to return value passed by our `ProductContext` Provider `value` prop. In our case we're getting back an object with two properties. A `products` property and a `addItem` property. We can go ahead and destructure those.
 
-Contribution: 2021-10-22 10:00
+```js
+const { products, addItem } = useContext(ProductContext);
+```
 
-Contribution: 2021-10-22 10:01
+- Now that we have all of the data we need we can refactor our `Products` component from using props.
 
-Contribution: 2021-10-22 10:02
+- To do so we just need to remove every instance of `props`.
 
-Contribution: 2021-10-22 10:03
+  - Remove it from the function parameters
+  - Remove it from the products map
+  - Remove it from addItem prop
 
-Contribution: 2021-10-22 10:04
+- Now our `Products` component is getting it's data solely from `Context API` 😃.
 
-Contribution: 2021-10-22 10:05
+**STEP 5 - Create the CartContext**
 
-Contribution: 2021-10-22 10:06
+- Now that we have refactored our `Products` component to utilize `Context API` let's refactor our `Cart` and `Navigation` Component to use `Context API` as well.
 
-Contribution: 2021-10-25 10:00
+- To start create a new file in our contexts folder named `CartContext.js`, this context is going to be utilized by our `ShoppingCart` and `Navigation` component.
 
-Contribution: 2021-10-25 10:01
+- Inside of our new `CartContext` import `createContext` and create a new context named `CartContext`.
 
-Contribution: 2021-10-25 10:02
+**STEP 6 - Providing data with CartContext**
 
-Contribution: 2021-10-26 10:00
+- Let's go ahead and bring our newly created `CartContext` into our `App.js` and wrap all of our components inside of our `CartContext.Provider`. Make sure our `ProductContext.Provider` is still the root provider.
 
-Contribution: 2021-10-26 10:01
+- Now pass a value prop to our `CartContext.Provider`, this value prop is going to contain our `cart` state.
 
-Contribution: 2021-10-26 10:02
+- Now that we're providing our cart data, we can start to refactor our `Navigation` and `ShoppingCart` components.
 
-Contribution: 2021-10-26 10:03
+- Let's start with our `ShoppingCart` component first. Go ahead and refactor the `ShoppingCart` route to no longer use render props. This will throw us an error, but we'll be able to resolve it quickly.
 
-Contribution: 2021-10-26 10:04
+- While were at it let's go ahead and remove the props from our navigation as well.
 
-Contribution: 2021-10-26 10:05
+**STEP 7 - The final stretch**
 
-Contribution: 2021-10-26 10:06
+- Our cart data is now being provided to us from our `CartContext` time to consume it!
 
-Contribution: 2021-10-26 10:07
+- First, let's head to our `ShoppingCart` component and import the `useContext` hook and our `CartContext`.
 
-Contribution: 2021-10-26 10:08
+- Now in the component, pass `CartContext` to the `useContext` hook and assign it to a variable named cart.
 
-Contribution: 2021-10-26 10:09
+- Inside of our component we now need to remove all instances of props.
 
-Contribution: 2021-10-26 10:10
+  - Remove the `props` parameter
+  - Remove the `props` portion in our `getCartTotal` function
+  - Remove `props` when we're mapping over our cart
 
-Contribution: 2021-10-26 10:11
+- Time to do the same thing for our `Navigation` component.
+  - First import the `useContext` hook and our `CartContext`
+  - Next, pass our `CartContext` to the `useContext` hook and assign it to a variable named cart.
+  - Lastly we need to remove all instances of `props`
+    - Remove `props` from our parameters
+    - Remove `props` from our cart length
 
-Contribution: 2021-10-27 10:00
+We have now successfully converted our application into using `Context API` 🔥
 
-Contribution: 2021-10-27 10:01
+**MVP Requirements**
 
-Contribution: 2021-10-28 10:00
+- Create a `ProductContext` and a `CartContext`
+- Use the Provider Component from `ProductContext` and `CartContext` to provide data to child components
+- Consume data using the `useContext` hook from `ProductContext` and `CartContext`
 
-Contribution: 2021-10-28 10:01
+### Task 3: Stretch Problems
 
-Contribution: 2021-10-28 10:02
+Do not attempt stretch problems until MVP has been reached and a final commit has been made.
 
-Contribution: 2021-10-28 10:03
+- Create a `removeItem` function that allows you to remove an item from your cart with a click of a button. This `removeItem` function should be able to be consumed from your `ShoppingCartItem` component.
+  Remember each item has an `id` this will help out a lot while creating your removeItem function!
 
-Contribution: 2021-10-28 10:04
+- Persist Cart Items using `localStorage`. (If you try this one, it will be a bit tricky to get our items to populate the shopping cart on a refresh. You'll have to think about where the data actually lives, and how you can get data there from localStorage when the app is being mounted after a refresh. Good luck!)
 
-Contribution: 2021-10-28 10:05
-
-Contribution: 2021-10-28 10:06
-
-Contribution: 2021-10-28 10:07
-
-Contribution: 2021-10-28 10:08
-
-Contribution: 2021-10-28 10:09
-
-Contribution: 2021-11-08 10:00
-
-Contribution: 2021-11-08 10:01
-
-Contribution: 2021-11-08 10:02
-
-Contribution: 2021-11-08 10:03
-
-Contribution: 2021-11-08 10:04
-
-Contribution: 2021-11-08 10:05
-
-Contribution: 2021-11-08 10:06
-
-Contribution: 2021-11-08 10:07
-
-Contribution: 2021-11-09 10:00
-
-Contribution: 2021-11-09 10:01
-
-Contribution: 2021-11-09 10:02
-
-Contribution: 2021-11-09 10:03
-
-Contribution: 2021-11-09 10:04
-
-Contribution: 2021-11-09 10:05
-
-Contribution: 2021-11-09 10:06
-
-Contribution: 2021-11-09 10:07
-
-Contribution: 2021-11-09 10:08
-
-Contribution: 2021-11-09 10:09
-
-Contribution: 2021-11-11 10:00
-
-Contribution: 2021-11-11 10:01
-
-Contribution: 2021-11-11 10:02
-
-Contribution: 2021-11-11 10:03
-
-Contribution: 2021-11-11 10:04
-
-Contribution: 2021-11-11 10:05
-
-Contribution: 2021-11-11 10:06
-
-Contribution: 2021-11-17 10:00
-
-Contribution: 2021-11-17 10:01
-
-Contribution: 2021-11-17 10:02
-
-Contribution: 2021-11-17 10:03
-
-Contribution: 2021-11-17 10:04
-
-Contribution: 2021-11-17 10:05
-
-Contribution: 2021-11-17 10:06
-
-Contribution: 2021-11-18 10:00
-
-Contribution: 2021-11-18 10:01
-
-Contribution: 2021-11-18 10:02
-
-Contribution: 2021-11-18 10:03
-
-Contribution: 2021-11-18 10:04
-
-Contribution: 2021-11-18 10:05
-
-Contribution: 2021-11-18 10:06
-
-Contribution: 2021-11-18 10:07
-
-Contribution: 2021-11-19 10:00
-
-Contribution: 2021-11-19 10:01
-
-Contribution: 2021-11-19 10:02
-
-Contribution: 2021-11-19 10:03
-
-Contribution: 2021-11-19 10:04
-
-Contribution: 2021-11-19 10:05
-
-Contribution: 2021-11-19 10:06
-
-Contribution: 2021-11-19 10:07
-
-Contribution: 2021-11-22 10:00
-
-Contribution: 2021-11-22 10:01
-
-Contribution: 2021-11-22 10:02
-
-Contribution: 2021-11-22 10:03
-
-Contribution: 2021-11-22 10:04
-
-Contribution: 2021-11-22 10:05
-
-Contribution: 2021-11-22 10:06
-
-Contribution: 2021-11-22 10:07
-
-Contribution: 2021-11-22 10:08
-
-Contribution: 2021-11-22 10:09
-
-Contribution: 2021-11-22 10:10
-
-Contribution: 2021-11-22 10:11
-
-Contribution: 2021-11-23 10:00
-
-Contribution: 2021-11-23 10:01
-
-Contribution: 2021-11-23 10:02
-
-Contribution: 2021-11-23 10:03
-
-Contribution: 2021-11-24 10:00
-
-Contribution: 2021-11-24 10:01
-
-Contribution: 2021-11-25 10:00
-
-Contribution: 2021-11-25 10:01
-
-Contribution: 2021-11-25 10:02
-
-Contribution: 2021-11-25 10:03
-
-Contribution: 2021-11-25 10:04
-
-Contribution: 2021-11-25 10:05
-
-Contribution: 2021-11-25 10:06
-
-Contribution: 2021-11-25 10:07
-
-Contribution: 2021-11-26 10:00
-
-Contribution: 2021-11-30 10:00
-
-Contribution: 2021-12-01 10:00
-
-Contribution: 2021-12-01 10:01
-
-Contribution: 2021-12-01 10:02
-
-Contribution: 2021-12-01 10:03
-
-Contribution: 2021-12-01 10:04
-
-Contribution: 2021-12-01 10:05
-
-Contribution: 2021-12-02 10:00
-
-Contribution: 2021-12-06 10:00
-
-Contribution: 2021-12-06 10:01
-
-Contribution: 2021-12-06 10:02
-
-Contribution: 2021-12-06 10:03
-
-Contribution: 2021-12-06 10:04
-
-Contribution: 2021-12-06 10:05
-
-Contribution: 2021-12-06 10:06
-
-Contribution: 2021-12-06 10:07
-
-Contribution: 2021-12-06 10:08
-
-Contribution: 2021-12-08 10:00
-
-Contribution: 2021-12-09 10:00
-
-Contribution: 2021-12-09 10:01
-
-Contribution: 2021-12-09 10:02
-
-Contribution: 2021-12-10 10:00
-
-Contribution: 2021-12-13 10:00
-
-Contribution: 2021-12-13 10:01
-
-Contribution: 2021-12-14 10:00
-
-Contribution: 2021-12-14 10:01
-
-Contribution: 2021-12-14 10:02
-
-Contribution: 2021-12-14 10:03
-
-Contribution: 2021-12-14 10:04
-
-Contribution: 2021-12-14 10:05
-
-Contribution: 2021-12-14 10:06
-
-Contribution: 2021-12-14 10:07
-
-Contribution: 2021-12-14 10:08
-
-Contribution: 2021-12-14 10:09
-
-Contribution: 2021-12-14 10:10
-
-Contribution: 2021-12-14 10:11
-
-Contribution: 2021-12-15 10:00
-
-Contribution: 2021-12-15 10:01
-
-Contribution: 2021-12-15 10:02
-
-Contribution: 2021-12-15 10:03
-
-Contribution: 2021-12-15 10:04
-
-Contribution: 2021-12-17 10:00
-
-Contribution: 2021-12-20 10:00
-
-Contribution: 2021-12-20 10:01
-
-Contribution: 2021-12-20 10:02
-
-Contribution: 2021-12-20 10:03
-
-Contribution: 2021-12-20 10:04
-
-Contribution: 2021-12-20 10:05
-
-Contribution: 2021-12-20 10:06
-
-Contribution: 2021-12-20 10:07
-
-Contribution: 2021-12-23 10:00
-
-Contribution: 2021-12-23 10:01
-
-Contribution: 2021-12-23 10:02
-
-Contribution: 2021-12-23 10:03
-
-Contribution: 2021-12-23 10:04
-
-Contribution: 2021-12-28 10:00
-
-Contribution: 2021-12-28 10:01
-
-Contribution: 2021-12-28 10:02
-
-Contribution: 2021-12-29 10:00
-
-Contribution: 2021-12-29 10:01
-
-Contribution: 2021-12-29 10:02
-
-Contribution: 2021-12-29 10:03
-
-Contribution: 2021-12-29 10:04
-
-Contribution: 2021-12-29 10:05
-
-Contribution: 2021-12-29 10:06
-
-Contribution: 2021-12-30 10:00
-
-Contribution: 2021-12-30 10:01
-
-Contribution: 2021-12-30 10:02
-
-Contribution: 2021-12-30 10:03
-
-Contribution: 2021-12-30 10:04
-
-Contribution: 2021-12-30 10:05
-
-Contribution: 2021-12-30 10:06
-
-Contribution: 2021-12-30 10:07
-
-Contribution: 2021-12-30 10:08
-
-Contribution: 2021-12-30 10:09
-
-Contribution: 2021-12-30 10:10
-
-Contribution: 2021-12-30 10:11
-
-Contribution: 2021-12-31 10:00
-
-Contribution: 2022-01-04 10:00
-
-Contribution: 2022-01-07 10:00
-
-Contribution: 2022-01-07 10:01
-
-Contribution: 2022-01-07 10:02
-
-Contribution: 2022-01-07 10:03
-
-Contribution: 2022-01-10 10:00
-
+## Submission Format
+* [ ] Submit a Pull-Request to merge `<firstName-lastName>` Branch into `main` (student's  Repo). **Please don't merge your own pull request**
